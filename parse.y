@@ -2090,6 +2090,14 @@ arg_value	: arg
 		;
 
 aref_args	: none
+		| command
+		    {
+		    /*%%%*/
+			value_expr($1);
+			$$ = NEW_LIST($1, &@$);
+		    /*% %*/
+		    /*% ripper: args_add!(args_new!, $1) %*/
+		    }
 		| args trailer
 		    {
 			$$ = $1;

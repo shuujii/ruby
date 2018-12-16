@@ -1279,6 +1279,11 @@ eom
     assert_valid_syntax('obj::foo (1) {}')
   end
 
+  def test_method_call_with_args_and_no_parens_in_array
+    assert_equal(["1"], [sprintf "1"])
+    assert_equal(["2"], [sprintf "%d", 2])
+  end
+
   private
 
   def not_label(x) @result = x; @not_label ||= nil end
