@@ -1,6 +1,7 @@
 # coding: utf-8
 # frozen_string_literal: false
 require 'test/unit'
+require '-test-/integer'
 require 'tempfile'
 require 'timeout'
 require 'io/wait'
@@ -1509,6 +1510,9 @@ class TestProcess < Test::Unit::TestCase
 
   def test_sleep
     assert_raise(ArgumentError) { sleep(1, 1) }
+    [-1, -1.0, -1.to_bignum, -1r].each do |sec|
+      assert_raise_with_message(ArgumentError, /negative/) { sleep(sec) }
+    end
   end
 
   def test_getpgid
