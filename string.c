@@ -10944,21 +10944,6 @@ rb_to_symbol(VALUE name)
     return rb_str_intern(name);
 }
 
-#include <mach/mach_time.h>
-static VALUE
-benchmark(VALUE self, VALUE loop_count, VALUE val)
-{
-  int n = NUM2INT(loop_count);
-  double d = NUM2DBL(val);
-
-  uint64_t t = mach_absolute_time();
-  for (int i = 0; i < n; i++) DBL2NUM(d);
-  mach_timebase_info_data_t tb;
-  mach_timebase_info(&tb);
-  double elapsed = (mach_absolute_time() - t) * (tb.numer / tb.denom) * 1e-9;
-  return DBL2NUM(elapsed);
-}
-
 /*
  *  A <code>String</code> object holds and manipulates an arbitrary sequence of
  *  bytes, typically representing characters. String objects may be created
@@ -11177,6 +11162,4 @@ Init_String(void)
     rb_define_method(rb_cSymbol, "swapcase", sym_swapcase, -1);
 
     rb_define_method(rb_cSymbol, "encoding", sym_encoding, 0);
-
-    rb_define_method(rb_cString, "_bm", benchmark, 2);
 }
