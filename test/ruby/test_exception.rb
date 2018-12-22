@@ -700,7 +700,11 @@ end.join
   end
 
   def test_cause_at_end
-    assert_in_out_err([], <<-'end;', [], [/-: unexpected return\n/, /.*undefined local variable or method `n'.*\n/])
+    errs = [
+      /-: unexpected return\n/,
+      /.*undefined local variable or method `n'.*\n/,
+    ]
+    assert_in_out_err([], <<-'end;', [], errs)
       END{n}; END{return}
     end;
   end
@@ -1339,6 +1343,27 @@ $stderr = $stdout; raise "\x82\xa0"') do |outs, errs, status|
       raise Bug14566
     end;
     assert_in_out_err([], code, [], /Bug14566/, success: false, timeout: 2)
+  end
+
+  def test_non_exception_cause
+    code = "#{<<~"begin;"}\n#{<<~'end;'}"
+    begin;
+      raise "foo", cause: 1
+    end;
+    assert_in_out_err([], code, [], /foo/, success: false, timeout: 2)
+  end
+
+  def test_circular_cause_handle
+    errs = [/.*error 1.*\n/, /.*error 2.*\n/, /.*error 1.*/m]
+    assert_in_out_err([], "#{<<~"begin;"}\n#{<<~'end;'}", [], errs, success: false, timeout: 2)
+    begin;
+      begin
+        raise "error 1"
+      rescue => e1
+        raise "error 2" rescue e2 = $!
+        raise e1, cause: e2
+      end
+    end;
   end
 
   def test_super_in_method_missing

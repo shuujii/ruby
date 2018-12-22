@@ -1414,6 +1414,7 @@ void rb_encdb_set_unicode(int index);
 PUREFUNC(int rb_data_is_encoding(VALUE obj));
 
 /* enum.c */
+extern VALUE rb_cArithSeq;
 VALUE rb_f_send(int argc, VALUE *argv, VALUE recv);
 VALUE rb_nmin_run(VALUE obj, VALUE num, int by, int rev, int ary);
 
@@ -1573,6 +1574,7 @@ VALUE rb_hash_key_str(VALUE);
 VALUE rb_hash_keys(VALUE hash);
 VALUE rb_hash_values(VALUE hash);
 VALUE rb_hash_rehash(VALUE hash);
+VALUE rb_hash_resurrect(VALUE hash);
 int rb_hash_add_new_element(VALUE hash, VALUE key, VALUE val);
 VALUE rb_hash_set_pair(VALUE hash, VALUE pair);
 void rb_hash_bulk_insert(long, const VALUE *, VALUE);
